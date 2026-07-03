@@ -1,0 +1,61 @@
+BEGIN HEADER
+   Date "2023-01-01"
+   ServerVersion "11.5"
+   ServerName "PROD_ETL"
+   ToolVersion "1.0"
+END HEADER
+BEGIN DSRECORD
+   Identifier "DSJob_Default"
+   JobType "3"
+   Category "Jobs\\Sales"
+   FullDescription "Aggregates customer orders and applies a discount."
+   BEGIN DSSUBRECORD
+      Name "DISCOUNT_PCT"
+      Prompt "Discount Percentage"
+      Default "10"
+      ParamType "2"
+      HelpTxt "Enter discount percentage."
+   END DSSUBRECORD
+END DSRECORD
+BEGIN DSRECORD
+   Identifier "SRC_ORDERS"
+   Name "SRC_ORDERS"
+   OLEType "CSeqFileStage"
+   StageType "SequentialFile"
+   OutputPins "LNK_1"
+   BEGIN DSSUBRECORD
+      Name "XMLProperties"
+      Value "<Context type='int'><![CDATA[1]]></Context><TableName><![CDATA[schema.raw_orders]]></TableName>"
+   END DSSUBRECORD
+END DSRECORD
+BEGIN DSRECORD
+   Identifier "TRF_CALC"
+   Name "TRF_CALC"
+   OLEType "CTransformerStage"
+   StageType "Transformer"
+   InputPins "LNK_1"
+   OutputPins "LNK_2"
+END DSRECORD
+BEGIN DSRECORD
+   Identifier "TGT_SUMMARY"
+   Name "TGT_SUMMARY"
+   OLEType "CCustomStage"
+   StageType "Db2Connector"
+   InputPins "LNK_2"
+   BEGIN DSSUBRECORD
+      Name "XMLProperties"
+      Value "<Context type='int'><![CDATA[2]]></Context><TableName><![CDATA[schema.orders_summary]]></TableName>"
+   END DSSUBRECORD
+END DSRECORD
+BEGIN DSRECORD
+   Identifier "LNK_1"
+   Name "LNK_1"
+   OLEType "CCustomOutput"
+   Partner "SRC_ORDERS|out1"
+END DSRECORD
+BEGIN DSRECORD
+   Identifier "LNK_2"
+   Name "LNK_2"
+   OLEType "CCustomOutput"
+   Partner "TRF_CALC|out1"
+END DSRECORD
