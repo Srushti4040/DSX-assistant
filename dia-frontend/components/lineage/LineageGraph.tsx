@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import ReactFlow, { Background, Controls, MiniMap, type Node, type Edge } from "reactflow";
+import ReactFlow, { Background, Controls, MiniMap, MarkerType, type Node, type Edge } from "reactflow";
 import "reactflow/dist/style.css";
 import type { Lineage } from "@/types";
 
@@ -93,7 +93,7 @@ export default function LineageGraph({ lineage }: { lineage: Lineage }) {
       target: e.to,
       animated: true,
       style: { stroke: "#6366f1", strokeWidth: 2 },
-      markerEnd: { type: "arrowclosed" as const, color: "#6366f1", width: 18, height: 18 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: "#6366f1", width: 18, height: 18 },
     })),
   [lineage]);
 
